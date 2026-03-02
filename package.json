@@ -9,13 +9,17 @@
     "generate-hash": "node scripts/generate-password-hash.js",
     "logs": "vercel logs --follow"
   },
-  "keywords": ["seminar", "registration", "vercel"],
+  "keywords": [
+    "seminar",
+    "registration",
+    "vercel"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@vercel/postgres": "^0.5.1",
-    "resend": "^3.0.0",
+    "@neondatabase/serverless": "^1.0.2",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "resend": "^3.0.0"
   }
 }
