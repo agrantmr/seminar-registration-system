@@ -1,0 +1,22 @@
+{
+  "name": "seminar-registration",
+  "version": "1.0.0",
+  "description": "Registration system for A Beginner's Guide to AI seminar",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel --prod",
+    "generate-hash": "node scripts/generate-password-hash.js",
+    "logs": "vercel logs --follow"
+  },
+  "keywords": ["seminar", "registration", "vercel"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/postgres": "^0.5.1",
+    "resend": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
