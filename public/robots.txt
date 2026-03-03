@@ -4,4 +4,4 @@ Disallow: /admin.html
 Disallow: /api/admin/
 Disallow: /api/cron/
 
-Sitemap: https://seminar-sigma.vercel.app/sitemap.xml
+Sitemap: https://proseminars.org/sitemap.xml
