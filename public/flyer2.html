@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Beginner's Guide to AI - Dynamic Flyer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A5;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 0;
+            width: 148mm;
+            height: 210mm;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header with pop-art - bleeds to edges */
+        .header {
+            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            margin: 0 -5mm -40px -5mm;
+            padding-left: 5mm;
+            padding-right: 5mm;
+            padding-bottom: 60px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .header-image {
+            width: 180px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: rotate(-2deg);
+            z-index: 15;
+            position: relative;
+        }
+
+        .header-text {
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .header-text h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Comic-style speech bubble for tagline */
+        .tagline-bubble {
+            background: white;
+            color: #2d3d8a;
+            padding: 10px 15px;
+            border-radius: 15px;
+            position: relative;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 700;
+            font-style: italic;
+            border: 3px solid #2d3d8a;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            transform: rotate(-1deg);
+        }
+
+        .tagline-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: white;
+            border-bottom: 0;
+            margin-left: -10px;
+        }
+
+        .tagline-bubble:before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border: 11px solid transparent;
+            border-top-color: #2d3d8a;
+            border-bottom: 0;
+            margin-left: -11px;
+            z-index: -1;
+        }
+
+        /* Yellow event details with torn bottom edge */
+        .event-details {
+            background: linear-gradient(135deg, #ffd966 0%, #f9e79f 100%);
+            color: #333;
+            padding: 25px;
+            position: relative;
+            z-index: 5;
+            margin: 0 5px -35px 5px;
+            clip-path: polygon(
+                0 0, 100% 0, 100% 85%,
+                98% 88%, 95% 86%, 92% 89%,
+                88% 87%, 85% 90%, 82% 88%,
+                78% 91%, 75% 89%, 72% 92%,
+                68% 90%, 65% 93%, 62% 91%,
+                58% 94%, 55% 92%, 52% 95%,
+                48% 93%, 45% 96%, 42% 94%,
+                38% 97%, 35% 95%, 32% 98%,
+                28% 96%, 25% 99%, 22% 97%,
+                18% 100%, 15% 98%, 12% 100%,
+                8% 98%, 5% 100%, 2% 98%, 0 100%
+            );
+        }
+
+        .event-info {
+            display: grid;
+            gap: 15px;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .event-info-item .icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .event-info-item .value {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* White content block - shifted left, overlapping */
+        .description {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            position: relative;
+            z-index: 8;
+            margin: 0 15px -30px -5px;
+            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .description h2 {
+            font-size: 22px;
+            color: #2d3d8a;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .description p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .description ul {
+            list-style: none;
+            padding-left: 0;
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            margin-top: 15px;
+        }
+
+        .description li {
+            color: #333;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .description li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2d3d8a;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .description li strong {
+            color: #2d3d8a;
+        }
+
+        /* Red registration banner - bleeds to edges with torn top */
+        .register-banner {
+            background: linear-gradient(135deg, #ca1d26 0%, #d66d4b 100%);
+            color: white;
+            padding: 25px 20px 30px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 12;
+            margin: 0 -5mm 0 10px;
+            padding-bottom: 5mm;
+            clip-path: polygon(
+                0 8%, 2% 5%, 5% 7%, 8% 4%,
+                12% 6%, 15% 3%, 18% 5%, 22% 2%,
+                25% 4%, 28% 1%, 32% 3%, 35% 0,
+                38% 2%, 42% 0, 45% 3%, 48% 1%,
+                52% 4%, 55% 2%, 58% 5%, 62% 3%,
+                65% 6%, 68% 4%, 72% 7%, 75% 5%,
+                78% 8%, 82% 6%, 85% 9%, 88% 7%,
+                92% 10%, 95% 8%, 98% 11%, 100% 9%,
+                100% 100%, 0 100%
+            );
+        }
+
+        .register-banner h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transform: rotate(2deg);
+        }
+
+        .qr-code img {
+            display: block;
+            width: 120px;
+            height: 120px;
+        }
+
+        .url-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .url-box {
+            background: white;
+            color: #ca1d26;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            transform: rotate(-1deg);
+            border: 3px solid white;
+        }
+
+        .url-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header bleeds to edges -->
+    <div class="header">
+        <div class="header-content">
+            <img src="https://pmpegodefnpnsdbbudcw.supabase.co/storage/v1/object/public/logos/At-Last-2.png"
+                 alt="AT LAST!"
+                 class="header-image">
+            <div class="header-text">
+                <h1>A Beginner's Guide to AI</h1>
+                <div class="tagline-bubble">
+                    Demystifying AI for everyone
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yellow block with torn bottom edge, overlapping header -->
+    <div class="event-details">
+        <div class="event-info">
+            <div class="event-info-item">
+                <div class="icon">📍</div>
+                <div class="details">
+                    <div class="value">
+                        <span style="font-size: 22px; display: block; margin-bottom: 3px; font-weight: 700;">Stickford Community Centre</span>
+                        Church Road, Stickford PE22 8ES
+                    </div>
+                </div>
+            </div>
+            <div class="event-info-item">
+                <div class="icon">📆</div>
+                <div class="details">
+                    <div class="value">Wednesday, April 8th, 2026</div>
+                </div>
+            </div>
+            <div class="event-info-item">
+                <div class="icon">💷</div>
+                <div class="details">
+                    <div class="value">£5 per person, on the door</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- White content shifted left, overlapping yellow and red -->
+    <div class="description">
+        <h2>Who is this for?</h2>
+        <p>Have you tried ChatGPT but weren't sure what the fuss was about? Do you want to use AI for more than just "asking questions," but don't know where to start?</p>
+
+        <p>Join us for a 90-minute, jargon-free session designed for the curious, the sceptical, and the non-techy.</p>
+
+        <p><strong>What you will learn:</strong></p>
+        <ul>
+            <li><strong>Prompting Tips:</strong> How to get exactly what you want from AI.</li>
+            <li><strong>Life Hacks:</strong> Everyday uses for AI to save you time and effort.</li>
+            <li><strong>Virtual Motivation:</strong> AI as a study buddy, life coach, interview trainer.</li>
+            <li><strong>Creative Fun:</strong> Planning trips, meals, and hobbies in seconds.</li>
+            <li><strong>Safety First:</strong> How to spot AI errors and protect your privacy.</li>
+            <li><strong>The Expert Trick</strong> to get unlimited AI for free.</li>
+            <li>…and much more!</li>
+        </ul>
+    </div>
+
+    <!-- Red banner with torn top edge, bleeds to bottom and sides -->
+    <div class="register-banner">
+        <h3>⚡ Hurry! Register online<br>Limited seats available</h3>
+
+        <div class="register-section">
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://proseminars.org"
+                     alt="QR Code">
+            </div>
+
+            <div class="url-section">
+                <div class="url-box">proseminars.org</div>
+                <div class="url-label">Scan or visit to register</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
