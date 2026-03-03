@@ -101,6 +101,53 @@
             font-size: 24px;
         }
 
+        .event-details {
+            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .event-details h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .event-info {
+            display: grid;
+            gap: 15px;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .event-info-item .icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .event-info-item .details {
+            flex: 1;
+        }
+
+        .event-info-item .label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .event-info-item .value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
         .description {
             margin-bottom: 30px;
         }
@@ -254,6 +301,30 @@
             }
         }
 
+        .map-section {
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        .map-section h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .map-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: 0;
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0;
@@ -286,6 +357,14 @@
             .form-section {
                 padding: 20px;
             }
+
+            .map-section {
+                padding: 30px 20px;
+            }
+
+            .map-container iframe {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -309,16 +388,41 @@
                 <span>Hurry! Limited seats available.</span>
             </div>
 
+            <div class="event-details">
+                <h3>📅 Event Details</h3>
+                <div class="event-info">
+                    <div class="event-info-item">
+                        <div class="icon">📆</div>
+                        <div class="details">
+                            <div class="label">Date</div>
+                            <div class="value">Wednesday, April 8th, 2026</div>
+                        </div>
+                    </div>
+                    <div class="event-info-item">
+                        <div class="icon">📍</div>
+                        <div class="details">
+                            <div class="label">Location</div>
+                            <div class="value">Stickford Community Centre<br>Church Road, Stickford PE22 8ES</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="description">
                 <h2>About the Seminar</h2>
-                <p>Join us for an engaging introduction to Artificial Intelligence designed specifically for beginners. No technical background required!</p>
+                <p>Have you tried ChatGPT but weren't sure what the fuss was about? Do you want to use AI for more than just "asking questions," but don't know where to start?</p>
 
-                <p><strong>What you'll learn:</strong></p>
+                <p>Join us for a 90-minute, jargon-free session designed for the curious, the sceptical, and the non-techy.</p>
+
+                <p><strong>What you will learn:</strong></p>
                 <ul>
-                    <li>What AI really is (and isn't)</li>
-                    <li>How AI is used in everyday applications</li>
-                    <li>The future of AI and its impact on society</li>
-                    <li>Practical ways to start using AI tools today</li>
+                    <li><strong>Prompting Tips:</strong> How to get exactly what you want from AI.</li>
+                    <li><strong>Life Hacks:</strong> Everyday uses for AI to save you time and effort.</li>
+                    <li><strong>Virtual Motivation:</strong> AI as a study buddy, life coach, interview trainer.</li>
+                    <li><strong>Creative Fun:</strong> Planning trips, meals, and hobbies in seconds.</li>
+                    <li><strong>Safety First:</strong> How to spot AI errors and protect your privacy.</li>
+                    <li><strong>The Expert Trick</strong> to get unlimited AI for free.</li>
+                    <li>…and much more!</li>
                 </ul>
             </div>
 
@@ -350,6 +454,18 @@
                         Register Now
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <div class="map-section">
+            <h3>📍 How to Find Us</h3>
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Stickford+Community+Centre,Church+Road,Stickford+PE22+8ES"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
         </div>
     </div>
