@@ -20,19 +20,16 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: white;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             background: white;
-            border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             width: 100%;
-            overflow: hidden;
+            margin: 0 auto;
             border: 1px solid #e0e0e0;
         }
 
@@ -252,8 +249,20 @@
         }
 
         @media (max-width: 600px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+                margin: 0;
+            }
+
             .header {
                 padding: 20px;
+                border-radius: 0;
             }
 
             .header-text h1 {
