@@ -87,7 +87,7 @@
             color: white;
             padding: 20px;
             border-radius: 12px;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 12px;
@@ -97,37 +97,35 @@
             text-align: center;
         }
 
+        .seat-counter.show {
+            display: flex;
+        }
+
         .seat-counter span:first-child {
             font-size: 24px;
         }
 
         .event-details {
-            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
-            color: white;
-            padding: 25px;
+            background: linear-gradient(135deg, #ffd966 0%, #f9e79f 100%);
+            color: #333;
+            padding: 30px;
             border-radius: 12px;
             margin-bottom: 30px;
         }
 
-        .event-details h3 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
         .event-info {
             display: grid;
-            gap: 15px;
+            gap: 20px;
         }
 
         .event-info-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 15px;
         }
 
         .event-info-item .icon {
-            font-size: 20px;
+            font-size: 28px;
             flex-shrink: 0;
             margin-top: 2px;
         }
@@ -136,44 +134,50 @@
             flex: 1;
         }
 
-        .event-info-item .label {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
         .event-info-item .value {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 600;
+            line-height: 1.4;
         }
 
         .description {
             margin-bottom: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
         }
 
         .description h2 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 26px;
+            color: #2d3d8a;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .description p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 12px;
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 17px;
         }
 
         .description ul {
             list-style: none;
             padding-left: 0;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            margin-top: 20px;
         }
 
         .description li {
-            color: #666;
-            line-height: 1.8;
-            padding-left: 24px;
+            color: #333;
+            line-height: 2;
+            padding-left: 28px;
             position: relative;
+            font-size: 16px;
         }
 
         .description li:before {
@@ -182,6 +186,11 @@
             left: 0;
             color: #2d3d8a;
             font-weight: bold;
+            font-size: 18px;
+        }
+
+        .description li strong {
+            color: #2d3d8a;
         }
 
         .form-section {
@@ -225,7 +234,7 @@
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
+            background: linear-gradient(135deg, #ca1d26 0%, #d66d4b 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -354,6 +363,38 @@
                 padding: 30px 20px;
             }
 
+            .event-details {
+                padding: 25px 20px;
+            }
+
+            .event-info-item .icon {
+                font-size: 24px;
+            }
+
+            .event-info-item .value {
+                font-size: 18px;
+            }
+
+            .description {
+                padding: 25px 20px;
+            }
+
+            .description h2 {
+                font-size: 22px;
+            }
+
+            .description p {
+                font-size: 16px;
+            }
+
+            .description ul {
+                padding: 20px;
+            }
+
+            .description li {
+                font-size: 15px;
+            }
+
             .form-section {
                 padding: 20px;
             }
@@ -383,26 +424,20 @@
         </div>
 
         <div class="content">
-            <div class="seat-counter" id="seatCounter">
-                <span>⚡</span>
-                <span>Hurry! Limited seats available.</span>
-            </div>
+            <div class="seat-counter" id="seatCounter"></div>
 
             <div class="event-details">
-                <h3>📅 Event Details</h3>
                 <div class="event-info">
-                    <div class="event-info-item">
-                        <div class="icon">📆</div>
-                        <div class="details">
-                            <div class="label">Date</div>
-                            <div class="value">Wednesday, April 8th, 2026</div>
-                        </div>
-                    </div>
                     <div class="event-info-item">
                         <div class="icon">📍</div>
                         <div class="details">
-                            <div class="label">Location</div>
                             <div class="value">Stickford Community Centre<br>Church Road, Stickford PE22 8ES</div>
+                        </div>
+                    </div>
+                    <div class="event-info-item">
+                        <div class="icon">📆</div>
+                        <div class="details">
+                            <div class="value">Wednesday, April 8th, 2026</div>
                         </div>
                     </div>
                 </div>
@@ -451,7 +486,7 @@
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        Register Now
+                        Register Now - Hurry! Limited seats available
                     </button>
                 </form>
             </div>
@@ -500,12 +535,14 @@
 
             if (seatsLeft <= 0) {
                 seatCounter.innerHTML = '<span>❌</span><span>Event Full!</span>';
+                seatCounter.classList.add('show');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Event Full';
             } else if (seatsLeft <= 11) {
                 seatCounter.innerHTML = `<span>🚨</span><span>Only ${seatsLeft} seats left out of ${totalSeats}!</span>`;
+                seatCounter.classList.add('show');
             } else {
-                seatCounter.innerHTML = '<span>⚡</span><span>Hurry! Limited seats available.</span>';
+                seatCounter.classList.remove('show');
             }
         }
 
@@ -556,7 +593,7 @@
                 showMessage('Network error. Please check your connection and try again.', 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Register Now';
+                submitBtn.textContent = 'Register Now - Hurry! Limited seats available';
             }
         });
 
