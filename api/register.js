@@ -54,9 +54,17 @@ module.exports = async (req, res) => {
 
     // Send confirmation email (async, don't wait)
     sendConfirmationEmail(result.registration.first_name, result.registration.email)
-      .then(emailResult => {
+      .then(async (emailResult) => {
         if (emailResult.success) {
-          markConfirmationSent(result.registration.id);
+          console.log('Email sent successfully, marking as sent for ID:', result.registration.id);
+          try {
+            await markConfirmationSent(result.registration.id);
+            console.log('✅ Marked confirmation as sent for ID:', result.registration.id);
+          } catch (markError) {
+            console.error('❌ Failed to mark confirmation as sent:', markError);
+          }
+        } else {
+          console.error('Email failed to send:', emailResult.error);
         }
       })
       .catch(err => console.error('Failed to send confirmation email:', err));
