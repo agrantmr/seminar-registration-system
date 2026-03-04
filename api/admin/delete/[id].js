@@ -2,7 +2,7 @@ const { requireAuth } = require('../../../lib/auth');
 const { neon } = require('@neondatabase/serverless');
 
 // Create SQL client
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 
 async function handler(req, res) {
   // Only allow DELETE requests
