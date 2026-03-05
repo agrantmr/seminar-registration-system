@@ -1,5 +1,5 @@
 const { addFeedback } = require('../lib/db');
-const { sanitizeName, checkRateLimit, getClientIP } = require('../lib/utils');
+const { sanitizeName, isValidEmail, checkRateLimit, getClientIP } = require('../lib/utils');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -7,17 +7,22 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { name, feedback, consent } = req.body;
+    const { name, email, feedback, consent } = req.body;
 
     // Validate input
-    if (!name || !feedback || !consent) {
-      return res.status(400).json({ error: 'Name, feedback, and consent are required' });
+    if (!name || !email || !feedback || !consent) {
+      return res.status(400).json({ error: 'Name, email, feedback, and consent are required' });
     }
 
     const sanitizedName = sanitizeName(name);
+    const sanitizedEmail = email.trim().toLowerCase();
 
     if (!sanitizedName || sanitizedName.length < 2) {
       return res.status(400).json({ error: 'Please enter a valid name' });
+    }
+
+    if (!isValidEmail(sanitizedEmail)) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
     }
 
     if (!feedback.trim() || feedback.trim().length < 10) {
@@ -39,7 +44,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    const result = await addFeedback(sanitizedName, feedback.trim(), clientIP);
+    const result = await addFeedback(sanitizedName, sanitizedEmail, feedback.trim(), clientIP);
 
     res.status(200).json({
       success: true,

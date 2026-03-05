@@ -221,23 +221,6 @@
             font-size: 18px;
             color: #666;
             line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .success-screen .home-btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .success-screen .home-btn:hover {
-            transform: translateY(-2px);
         }
 
         @media (max-width: 600px) {
@@ -302,14 +285,14 @@
     <div class="container">
         <div class="header">
             <h1>💬 Share Your Feedback</h1>
-            <p>Help us improve future seminars</p>
+            <p>A Beginner's Guide to AI</p>
         </div>
 
         <div class="content">
             <!-- Form Screen -->
             <div id="formScreen">
                 <div class="intro">
-                    <p>Thanks for attending! We'd love to hear your thoughts. Please share your feedback, suggestions, or any questions you may have. All suggestions are welcome.</p>
+                    <p>Thanks for attending <strong>A Beginner's Guide to AI</strong>! We'd love to hear your thoughts. Please share your feedback, suggestions, or any questions you may have. All suggestions are welcome.</p>
                 </div>
 
                 <div class="form-section">
@@ -324,6 +307,15 @@
                                    required
                                    maxlength="100"
                                    placeholder="Enter your name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email"
+                                   id="email"
+                                   name="email"
+                                   required
+                                   placeholder="Enter your email">
                         </div>
 
                         <div class="form-group">
@@ -343,7 +335,7 @@
                                    id="consent"
                                    name="consent"
                                    required>
-                            <label for="consent">I consent to submitting this feedback for review and improvement of future seminars. *</label>
+                            <label for="consent">I consent to my feedback being used for future promotion of seminars. My feedback will be anonymised and my name/email will not be shared publicly. *</label>
                         </div>
 
                         <button type="submit" class="submit-btn" id="submitBtn">
@@ -358,7 +350,6 @@
                 <div class="icon">✅</div>
                 <h2>Thank You!</h2>
                 <p>Your feedback has been submitted successfully. We appreciate you taking the time to help us improve.</p>
-                <a href="/" class="home-btn">Return to Home</a>
             </div>
         </div>
     </div>
@@ -394,12 +385,18 @@
             e.preventDefault();
 
             const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
             const feedback = document.getElementById('feedback').value.trim();
             const consent = document.getElementById('consent').checked;
 
             // Client-side validation
             if (!name || name.length < 2) {
                 showMessage('Please enter a valid name (at least 2 characters).', 'error');
+                return;
+            }
+
+            if (!email) {
+                showMessage('Please enter a valid email address.', 'error');
                 return;
             }
 
@@ -424,7 +421,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, feedback, consent })
+                    body: JSON.stringify({ name, email, feedback, consent })
                 });
 
                 const data = await response.json();

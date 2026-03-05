@@ -23,6 +23,7 @@ CREATE INDEX idx_registered_at ON registrations(registered_at);
 CREATE TABLE feedback (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL,
   feedback TEXT NOT NULL,
   ip_address VARCHAR(45),
   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -44,6 +45,7 @@ COMMENT ON COLUMN registrations.ip_address IS 'IP address for rate limiting';
 
 COMMENT ON TABLE feedback IS 'Stores post-seminar feedback submissions';
 COMMENT ON COLUMN feedback.name IS 'Name of person submitting feedback';
+COMMENT ON COLUMN feedback.email IS 'Email of person submitting feedback';
 COMMENT ON COLUMN feedback.feedback IS 'Feedback content';
 COMMENT ON COLUMN feedback.ip_address IS 'IP address for rate limiting';
 COMMENT ON COLUMN feedback.submitted_at IS 'Timestamp of submission';

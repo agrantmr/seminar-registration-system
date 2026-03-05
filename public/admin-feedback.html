@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Seminar Registration</title>
+    <title>Feedback - Admin Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -18,7 +18,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -51,11 +51,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .header h1 {
             font-size: 28px;
             color: #333;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #2d3d8a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: #1a2555;
         }
 
         .logout-btn {
@@ -169,21 +192,9 @@
             background: #f9f9f9;
         }
 
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge.success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .badge.pending {
-            background: #fff3cd;
-            color: #856404;
+        .feedback-text {
+            max-width: 500px;
+            line-height: 1.5;
         }
 
         .form-group {
@@ -222,21 +233,6 @@
             cursor: pointer;
         }
 
-        .delete-btn {
-            padding: 6px 12px;
-            background: #ca1d26;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .delete-btn:hover {
-            background: #a01620;
-        }
-
         .submit-btn:hover {
             opacity: 0.9;
         }
@@ -268,6 +264,30 @@
             padding: 40px;
             color: #666;
         }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .nav-btn, .logout-btn {
+                width: 100%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -295,43 +315,31 @@
     <!-- Dashboard -->
     <div class="container dashboard" id="dashboard">
         <div class="header">
-            <h1>📊 Admin Dashboard</h1>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+            <h1>💬 Feedback Submissions</h1>
+            <div class="header-buttons">
+                <a href="/admin.html" class="nav-btn">← Back to Dashboard</a>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
         </div>
 
         <div class="stats">
             <div class="stat-card">
-                <h3>Total Registrations</h3>
-                <div class="value" id="totalRegistrations">-</div>
-            </div>
-            <div class="stat-card">
-                <h3>Available Seats</h3>
-                <div class="value" id="availableSeats">-</div>
-            </div>
-            <div class="stat-card">
-                <h3>Attendees</h3>
-                <div class="value" id="attendeeCount">-</div>
-            </div>
-            <div class="stat-card">
-                <h3>Confirmations Sent</h3>
-                <div class="value" id="confirmationsSent">-</div>
+                <h3>Total Feedback</h3>
+                <div class="value" id="totalFeedback">-</div>
             </div>
         </div>
 
         <div class="actions">
             <button onclick="refreshData()">🔄 Refresh</button>
-            <button onclick="exportCSV()">📥 Export CSV</button>
-            <button onclick="sendThankyouEmails()">📧 Send Thank You Emails to All Attendees</button>
-            <button onclick="window.location.href='/admin-feedback.html'">💬 View Feedback</button>
         </div>
 
         <div class="table-container">
             <div class="table-header">
-                <h2>Registrations</h2>
+                <h2>All Feedback</h2>
             </div>
 
             <div id="tableContent">
-                <div class="loading">Loading registrations...</div>
+                <div class="loading">Loading feedback...</div>
             </div>
         </div>
     </div>
@@ -404,46 +412,34 @@
 
         async function loadDashboardData() {
             try {
-                // Fetch seat info
-                const seatsResponse = await fetch('/api/seats');
-                const seatsData = await seatsResponse.json();
-
-                // Fetch registrations
-                const regResponse = await fetch('/api/admin/registrations', {
+                const response = await fetch('/api/admin/feedback', {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
                 });
 
-                if (regResponse.status === 401) {
+                if (response.status === 401) {
                     logout();
                     return;
                 }
 
-                const regData = await regResponse.json();
+                const data = await response.json();
 
                 // Update stats
-                document.getElementById('totalRegistrations').textContent = seatsData.registeredSeats;
-                document.getElementById('availableSeats').textContent = seatsData.availableSeats;
-
-                const confirmationsSent = regData.registrations.filter(r => r.confirmation_sent).length;
-                document.getElementById('confirmationsSent').textContent = confirmationsSent;
-
-                const attendeeCount = regData.registrations.filter(r => r.attended).length;
-                document.getElementById('attendeeCount').textContent = attendeeCount;
+                document.getElementById('totalFeedback').textContent = data.feedback.length;
 
                 // Render table
-                renderTable(regData.registrations);
+                renderTable(data.feedback);
             } catch (error) {
-                console.error('Error loading dashboard data:', error);
+                console.error('Error loading feedback data:', error);
             }
         }
 
-        function renderTable(registrations) {
+        function renderTable(feedback) {
             const tableContent = document.getElementById('tableContent');
 
-            if (registrations.length === 0) {
-                tableContent.innerHTML = '<div class="loading">No registrations yet.</div>';
+            if (feedback.length === 0) {
+                tableContent.innerHTML = '<div class="loading">No feedback submissions yet.</div>';
                 return;
             }
 
@@ -454,45 +450,18 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Registered At</th>
-                            <th>Confirmation</th>
-                            <th>Week Reminder</th>
-                            <th>Day Reminder</th>
-                            <th>Attended</th>
-                            <th>Thank You</th>
-                            <th>Actions</th>
+                            <th>Feedback</th>
+                            <th>Submitted At</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${registrations.map(reg => `
-                            <tr id="row-${reg.id}">
-                                <td>${reg.id}</td>
-                                <td>${reg.first_name}</td>
-                                <td>${reg.email}</td>
-                                <td>${new Date(reg.registered_at).toLocaleString()}</td>
-                                <td><span class="badge ${reg.confirmation_sent ? 'success' : 'pending'}">
-                                    ${reg.confirmation_sent ? 'Sent' : 'Pending'}
-                                </span></td>
-                                <td><span class="badge ${reg.week_reminder_sent ? 'success' : 'pending'}">
-                                    ${reg.week_reminder_sent ? 'Sent' : 'Pending'}
-                                </span></td>
-                                <td><span class="badge ${reg.day_reminder_sent ? 'success' : 'pending'}">
-                                    ${reg.day_reminder_sent ? 'Sent' : 'Pending'}
-                                </span></td>
-                                <td>
-                                    <input type="checkbox"
-                                           ${reg.attended ? 'checked' : ''}
-                                           onchange="toggleAttendance(${reg.id}, this.checked)"
-                                           style="cursor: pointer; width: 18px; height: 18px;">
-                                </td>
-                                <td><span class="badge ${reg.thankyou_sent ? 'success' : 'pending'}">
-                                    ${reg.thankyou_sent ? 'Sent' : 'Pending'}
-                                </span></td>
-                                <td>
-                                    <button class="delete-btn" onclick="deleteRegistration(${reg.id}, '${reg.email}')">
-                                        Delete
-                                    </button>
-                                </td>
+                        ${feedback.map(item => `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${escapeHtml(item.name)}</td>
+                                <td>${escapeHtml(item.email)}</td>
+                                <td><div class="feedback-text">${escapeHtml(item.feedback)}</div></td>
+                                <td>${new Date(item.submitted_at).toLocaleString()}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -502,138 +471,15 @@
             tableContent.innerHTML = html;
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function refreshData() {
             document.getElementById('tableContent').innerHTML = '<div class="loading">Refreshing...</div>';
             loadDashboardData();
-        }
-
-        async function exportCSV() {
-            try {
-                const response = await fetch('/api/admin/export', {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `registrations-${new Date().toISOString().split('T')[0]}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } catch (error) {
-                console.error('Error exporting CSV:', error);
-                alert('Failed to export CSV');
-            }
-        }
-
-        async function toggleAttendance(id, attended) {
-            try {
-                const response = await fetch('/api/admin/attendance', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id, attended })
-                });
-
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-
-                if (response.ok) {
-                    loadDashboardData(); // Refresh to update attendee count
-                } else {
-                    alert('Failed to update attendance');
-                    refreshData();
-                }
-            } catch (error) {
-                console.error('Error updating attendance:', error);
-                alert('Failed to update attendance');
-                refreshData();
-            }
-        }
-
-        async function sendThankyouEmails() {
-            if (!confirm('Send thank you emails to all attendees?')) {
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/admin/send-thankyou', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    alert(`${data.message}\n\nSent: ${data.sent}\nFailed: ${data.failed}\nTotal: ${data.total}`);
-                    refreshData();
-                } else {
-                    alert(data.error || 'Failed to send emails');
-                }
-            } catch (error) {
-                console.error('Error sending thank you emails:', error);
-                alert('Failed to send emails');
-            }
-        }
-
-        async function deleteRegistration(id, email) {
-            if (!confirm(`Are you sure you want to delete registration for ${email}?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/admin/delete/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Remove the row from the table
-                    const row = document.getElementById(`row-${id}`);
-                    if (row) {
-                        row.remove();
-                    }
-
-                    // Refresh data to update stats
-                    refreshData();
-
-                    alert('Registration deleted successfully');
-                } else {
-                    alert(data.error || 'Failed to delete registration');
-                }
-            } catch (error) {
-                console.error('Error deleting registration:', error);
-                alert('Failed to delete registration');
-            }
         }
     </script>
 </body>
