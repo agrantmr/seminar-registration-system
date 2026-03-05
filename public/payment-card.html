@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Card - A5 QR Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .print-container {
+            width: 148mm;
+            height: 210mm;
+            margin: 0 auto;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12mm;
+            margin-bottom: 15mm;
+            border-bottom: 3px solid #2d3d8a;
+            padding-bottom: 8mm;
+        }
+
+        .card-header-logo {
+            width: 25mm;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .card-header-text {
+            flex: 1;
+        }
+
+        .card-header-text h1 {
+            font-size: 18pt;
+            color: #2d3d8a;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2mm;
+        }
+
+        .card-header-text p {
+            font-size: 11pt;
+            color: #666;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15mm;
+        }
+
+        .qr-code-container {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 70mm;
+            height: 70mm;
+            border: 2px solid #2d3d8a;
+            padding: 2mm;
+            background: white;
+            display: inline-block;
+        }
+
+        .card-text {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .card-price {
+            font-size: 24pt;
+            color: #ca1d26;
+            font-weight: 700;
+            margin: 5mm 0;
+        }
+
+        .card-footer {
+            font-size: 10pt;
+            color: #999;
+            text-align: center;
+            margin-top: 10mm;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 5mm;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .print-container {
+                box-shadow: none;
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .print-container {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 148 / 210;
+                max-width: 400px;
+                padding: 15mm;
+            }
+
+            .card-header {
+                gap: 8mm;
+                margin-bottom: 10mm;
+            }
+
+            .card-header-logo {
+                width: 20mm;
+            }
+
+            .card-header-text h1 {
+                font-size: 14pt;
+            }
+
+            .card-header-text p {
+                font-size: 9pt;
+            }
+
+            .qr-code {
+                width: 50mm;
+                height: 50mm;
+            }
+
+            .card-text {
+                font-size: 12pt;
+            }
+
+            .card-price {
+                font-size: 18pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="card-header">
+            <img src="https://pmpegodefnpnsdbbudcw.supabase.co/storage/v1/object/public/logos/At-Last-2.png"
+                 alt="Seminar Logo"
+                 class="card-header-logo">
+            <div class="card-header-text">
+                <h1>A Beginner's Guide to AI</h1>
+                <p>"Demystifying AI for everyone"</p>
+            </div>
+        </div>
+
+        <div class="card-content">
+            <div class="qr-code-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=https://proseminars.org/pay"
+                     alt="Payment QR Code"
+                     class="qr-code">
+            </div>
+
+            <div class="card-text">
+                Scan here to pay by card
+            </div>
+
+            <div class="card-price">
+                £5.00 per person
+            </div>
+
+            <div class="card-footer">
+                ✓ Verified by Stripe
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Print dialog on load (optional - remove if you want to view first)
+        // window.print();
+    </script>
+</body>
+</html>
