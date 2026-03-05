@@ -309,6 +309,10 @@
                 <div class="value" id="availableSeats">-</div>
             </div>
             <div class="stat-card">
+                <h3>Attendees</h3>
+                <div class="value" id="attendeeCount">-</div>
+            </div>
+            <div class="stat-card">
                 <h3>Confirmations Sent</h3>
                 <div class="value" id="confirmationsSent">-</div>
             </div>
@@ -317,6 +321,7 @@
         <div class="actions">
             <button onclick="refreshData()">🔄 Refresh</button>
             <button onclick="exportCSV()">📥 Export CSV</button>
+            <button onclick="sendThankyouEmails()">📧 Send Thank You Emails to All Attendees</button>
         </div>
 
         <div class="table-container">
@@ -423,6 +428,9 @@
                 const confirmationsSent = regData.registrations.filter(r => r.confirmation_sent).length;
                 document.getElementById('confirmationsSent').textContent = confirmationsSent;
 
+                const attendeeCount = regData.registrations.filter(r => r.attended).length;
+                document.getElementById('attendeeCount').textContent = attendeeCount;
+
                 // Render table
                 renderTable(regData.registrations);
             } catch (error) {
@@ -449,6 +457,8 @@
                             <th>Confirmation</th>
                             <th>Week Reminder</th>
                             <th>Day Reminder</th>
+                            <th>Attended</th>
+                            <th>Thank You</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -467,6 +477,15 @@
                                 </span></td>
                                 <td><span class="badge ${reg.day_reminder_sent ? 'success' : 'pending'}">
                                     ${reg.day_reminder_sent ? 'Sent' : 'Pending'}
+                                </span></td>
+                                <td>
+                                    <input type="checkbox"
+                                           ${reg.attended ? 'checked' : ''}
+                                           onchange="toggleAttendance(${reg.id}, this.checked)"
+                                           style="cursor: pointer; width: 18px; height: 18px;">
+                                </td>
+                                <td><span class="badge ${reg.thankyou_sent ? 'success' : 'pending'}">
+                                    ${reg.thankyou_sent ? 'Sent' : 'Pending'}
                                 </span></td>
                                 <td>
                                     <button class="delete-btn" onclick="deleteRegistration(${reg.id}, '${reg.email}')">
@@ -512,6 +531,67 @@
             } catch (error) {
                 console.error('Error exporting CSV:', error);
                 alert('Failed to export CSV');
+            }
+        }
+
+        async function toggleAttendance(id, attended) {
+            try {
+                const response = await fetch('/api/admin/attendance', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id, attended })
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                if (response.ok) {
+                    loadDashboardData(); // Refresh to update attendee count
+                } else {
+                    alert('Failed to update attendance');
+                    refreshData();
+                }
+            } catch (error) {
+                console.error('Error updating attendance:', error);
+                alert('Failed to update attendance');
+                refreshData();
+            }
+        }
+
+        async function sendThankyouEmails() {
+            if (!confirm('Send thank you emails to all attendees?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/send-thankyou', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert(`${data.message}\n\nSent: ${data.sent}\nFailed: ${data.failed}\nTotal: ${data.total}`);
+                    refreshData();
+                } else {
+                    alert(data.error || 'Failed to send emails');
+                }
+            } catch (error) {
+                console.error('Error sending thank you emails:', error);
+                alert('Failed to send emails');
             }
         }
 

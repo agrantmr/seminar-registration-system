@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        .info-box {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🙏 Thank You for Attending!</h1>
+    </div>
+    <div class="content">
+        <p>Hi {{firstName}},</p>
+
+        <p>Thank you for attending <strong>A Beginner's Guide to AI</strong>! We hope you found the seminar informative and valuable.</p>
+
+        <div class="info-box">
+            <h3>💬 We'd Love Your Feedback</h3>
+            <p>Your feedback helps us improve future seminars and create better content for the community. Please take a moment to share your thoughts, suggestions, or any questions you may have.</p>
+            <p>All feedback is welcome and greatly appreciated!</p>
+        </div>
+
+        <center>
+            <a href="{{feedbackUrl}}" class="cta-button">Share Your Feedback</a>
+        </center>
+
+        <p>Thank you again for your participation. We look forward to seeing you at future events!</p>
+
+        <p>Best regards,<br>Andrew Grant</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated thank you email for attending our seminar.</p>
+    </div>
+</body>
+</html>
