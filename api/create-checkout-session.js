@@ -1,6 +1,5 @@
 const Stripe = require('stripe');
-const { addRegistration } = require('../lib/db');
-const { sendConfirmationEmail } = require('../lib/email');
+const { addRegistration, getRegistrationCount } = require('../lib/db');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -11,10 +10,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { quantity, name, email, paymentMethodId } = req.body;
+    const { quantity, name, email } = req.body;
 
     // Validate input
-    if (!quantity || !name || !email || !paymentMethodId) {
+    if (!quantity || !name || !email) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -23,108 +22,51 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Invalid quantity' });
     }
 
-    // Amount in pence: £5 per seat
-    const amountInPence = numSeats * 500;
+    // Check seat availability
+    const registeredSeats = await getRegistrationCount();
+    const totalSeats = parseInt(process.env.TOTAL_SEATS || '40');
 
-    // Create payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountInPence,
-      currency: 'gbp',
-      payment_method: paymentMethodId,
-      confirm: true,
-      automatic_payment_methods: {
-        enabled: false
-      },
-      description: `Seminar Admission - ${numSeats} seat(s)`,
-      receipt_email: email,
-      metadata: {
-        seminar: 'A Beginners Guide to AI',
-        seats: numSeats,
-        attendee_name: name
-      }
-    });
-
-    // Check if payment succeeded
-    if (paymentIntent.status !== 'succeeded') {
-      return res.status(402).json({
-        error: 'Payment failed',
-        status: paymentIntent.status
+    if (registeredSeats + numSeats > totalSeats) {
+      return res.status(400).json({
+        error: `Not enough seats available. ${totalSeats - registeredSeats} seats remaining.`
       });
     }
 
-    // Get client IP for registration
-    const ipAddress = req.headers['x-forwarded-for']?.split(',')[0].trim() ||
-                      req.connection.remoteAddress ||
-                      'unknown';
+    // Create Stripe Checkout Session
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.BASE_URL || 'https://proseminars.org';
 
-    // Add registrations for each seat
-    const registrations = [];
-    for (let i = 0; i < numSeats; i++) {
-      const seatNumber = i + 1;
-      const firstName = numSeats === 1 ? name : `${name} (Seat ${seatNumber})`;
-
-      const result = await addRegistration(firstName, email, ipAddress);
-
-      if (result.success) {
-        registrations.push(result.registration);
-
-        // Send confirmation email for this registration
-        try {
-          await sendConfirmationEmail(result.registration.first_name, result.registration.email);
-        } catch (emailError) {
-          console.error('Error sending confirmation email:', emailError);
-          // Don't fail the whole transaction if email fails
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: 'price_1T7eoXGf2Q3g0T8EJI646DCP',
+          quantity: numSeats
         }
-      } else if (result.message === 'Event is full') {
-        // Refund the payment if event is full
-        await stripe.refunds.create({
-          payment_intent: paymentIntent.id
-        });
-
-        return res.status(400).json({
-          error: 'Event is full. Payment has been refunded.',
-          seatsRegistered: i
-        });
-      } else {
-        console.error('Registration error:', result.message);
-        // Continue with other registrations
+      ],
+      customer_email: email,
+      mode: 'payment',
+      success_url: `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/pay.html`,
+      metadata: {
+        attendee_name: name,
+        attendee_email: email,
+        num_seats: numSeats
       }
-    }
+    });
 
     return res.status(200).json({
       success: true,
-      message: `Payment successful! ${registrations.length} seat(s) registered.`,
-      paymentIntentId: paymentIntent.id,
-      amount: amountInPence / 100,
-      seats: registrations.length,
-      registrations: registrations
+      sessionUrl: session.url,
+      sessionId: session.id
     });
 
   } catch (error) {
-    console.error('Error in create-checkout-session:', error);
-
-    // Handle Stripe-specific errors
-    if (error.type === 'StripeCardError') {
-      return res.status(402).json({
-        error: 'Card declined',
-        message: error.message
-      });
-    }
-
-    if (error.type === 'StripeRateLimitError') {
-      return res.status(429).json({
-        error: 'Too many requests. Please try again.'
-      });
-    }
-
-    if (error.type === 'StripeAuthenticationError') {
-      return res.status(401).json({
-        error: 'Authentication error with payment processor'
-      });
-    }
+    console.error('Error creating checkout session:', error);
 
     return res.status(500).json({
-      error: 'Payment processing failed',
+      error: 'Failed to create payment session',
       message: error.message
     });
   }
