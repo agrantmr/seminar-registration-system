@@ -203,12 +203,12 @@
 
         if (sessionId) {
             // Verify the session and get details
-            fetch('/api/verify-checkout-session', {
+            fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ sessionId })
+                body: JSON.stringify({ action: 'verify', sessionId })
             })
             .then(response => response.json())
             .then(data => {

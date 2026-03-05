@@ -10,9 +10,32 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { quantity, name, email } = req.body;
+    const { action, quantity, name, email, sessionId } = req.body;
 
-    // Validate input
+    // Handle session verification
+    if (action === 'verify' && sessionId) {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.payment_status !== 'paid') {
+        return res.status(400).json({
+          success: false,
+          error: 'Payment not completed'
+        });
+      }
+
+      const amountInPence = session.amount_total;
+      const amountInPounds = amountInPence / 100;
+
+      return res.status(200).json({
+        success: true,
+        seats: parseInt(session.metadata.num_seats),
+        amount: amountInPounds,
+        email: session.customer_email || session.metadata.attendee_email,
+        status: session.payment_status
+      });
+    }
+
+    // Handle session creation (default action)
     if (!quantity || !name || !email) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
@@ -63,10 +86,10 @@ module.exports = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('Error in checkout endpoint:', error);
 
     return res.status(500).json({
-      error: 'Failed to create payment session',
+      error: 'Failed to process checkout request',
       message: error.message
     });
   }
