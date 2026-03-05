@@ -25,41 +25,43 @@
             background: white;
             display: flex;
             flex-direction: column;
-            padding: 20mm;
+            padding: 0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             position: relative;
+            overflow: hidden;
         }
 
         .card-header {
+            background: linear-gradient(135deg, #2d3d8a 0%, #1a2555 100%);
+            color: white;
+            padding: 15mm;
             display: flex;
             align-items: center;
-            gap: 12mm;
-            margin-bottom: 15mm;
-            border-bottom: 3px solid #2d3d8a;
-            padding-bottom: 8mm;
+            gap: 10mm;
+            flex-shrink: 0;
         }
 
         .card-header-logo {
-            width: 25mm;
+            width: 30mm;
             height: auto;
             flex-shrink: 0;
         }
 
         .card-header-text {
             flex: 1;
+            min-width: 0;
         }
 
         .card-header-text h1 {
-            font-size: 18pt;
-            color: #2d3d8a;
+            font-size: 20pt;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.1;
             margin-bottom: 2mm;
         }
 
         .card-header-text p {
             font-size: 11pt;
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             font-style: italic;
             margin: 0;
         }
@@ -70,44 +72,47 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15mm;
-        }
-
-        .qr-code-container {
+            gap: 8mm;
+            padding: 15mm 20mm;
             text-align: center;
-        }
-
-        .qr-code {
-            width: 70mm;
-            height: 70mm;
-            border: 2px solid #2d3d8a;
-            padding: 2mm;
-            background: white;
-            display: inline-block;
         }
 
         .card-text {
-            text-align: center;
-            font-size: 16pt;
+            font-size: 18pt;
             font-weight: 700;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.3;
+        }
+
+        .qr-code-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code {
+            width: 60mm;
+            height: 60mm;
+            border: 2px solid #2d3d8a;
+            padding: 1.5mm;
+            background: white;
+            display: block;
         }
 
         .card-price {
-            font-size: 24pt;
+            font-size: 28pt;
             color: #ca1d26;
             font-weight: 700;
-            margin: 5mm 0;
+            margin: 0;
         }
 
         .card-footer {
-            font-size: 10pt;
-            color: #999;
+            font-size: 9pt;
+            color: #666;
             text-align: center;
-            margin-top: 10mm;
+            padding: 8mm 10mm;
             border-top: 1px solid #e0e0e0;
-            padding-top: 5mm;
+            flex-shrink: 0;
         }
 
         @media print {
@@ -128,24 +133,33 @@
                 height: auto;
                 aspect-ratio: 148 / 210;
                 max-width: 400px;
-                padding: 15mm;
+                padding: 0;
             }
 
             .card-header {
+                padding: 10mm;
                 gap: 8mm;
-                margin-bottom: 10mm;
             }
 
             .card-header-logo {
-                width: 20mm;
+                width: 25mm;
             }
 
             .card-header-text h1 {
-                font-size: 14pt;
+                font-size: 16pt;
             }
 
             .card-header-text p {
-                font-size: 9pt;
+                font-size: 10pt;
+            }
+
+            .card-content {
+                padding: 12mm 15mm;
+                gap: 6mm;
+            }
+
+            .card-text {
+                font-size: 16pt;
             }
 
             .qr-code {
@@ -153,12 +167,13 @@
                 height: 50mm;
             }
 
-            .card-text {
-                font-size: 12pt;
+            .card-price {
+                font-size: 24pt;
             }
 
-            .card-price {
-                font-size: 18pt;
+            .card-footer {
+                padding: 6mm 8mm;
+                font-size: 8pt;
             }
         }
     </style>
@@ -176,23 +191,23 @@
         </div>
 
         <div class="card-content">
-            <div class="qr-code-container">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=https://proseminars.org/pay.html"
-                     alt="Payment QR Code"
-                     class="qr-code">
-            </div>
-
             <div class="card-text">
                 Scan here to pay by card
+            </div>
+
+            <div class="qr-code-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://proseminars.org/pay.html"
+                     alt="Payment QR Code"
+                     class="qr-code">
             </div>
 
             <div class="card-price">
                 £5.00 per person
             </div>
+        </div>
 
-            <div class="card-footer">
-                ✓ Verified by Stripe
-            </div>
+        <div class="card-footer">
+            ✓ Secure payment by Stripe
         </div>
     </div>
 
