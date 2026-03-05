@@ -105,12 +105,52 @@
             font-size: 24px;
         }
 
-        .event-details {
+        .event-details-section {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 40px;
             background: linear-gradient(135deg, #ffd966 0%, #f9e79f 100%);
-            color: #333;
-            padding: 30px;
-            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
             margin-bottom: 30px;
+        }
+
+        .event-details {
+            background: none;
+            color: #333;
+            padding: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .presenter-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .presenter-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 6px solid #2d3d8a;
+            object-fit: cover;
+            background: #e9ecef;
+        }
+
+        .presenter-caption {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
         }
 
         .event-info {
@@ -334,6 +374,18 @@
             border: 0;
         }
 
+        @media (max-width: 800px) {
+            .event-details-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .presenter-image {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 0;
@@ -363,8 +415,10 @@
                 padding: 30px 20px;
             }
 
-            .event-details {
+            .event-details-section {
                 padding: 25px 20px;
+                flex-direction: column;
+                margin-bottom: 20px;
             }
 
             .event-info-item .icon {
@@ -373,6 +427,15 @@
 
             .event-info-item .value {
                 font-size: 18px;
+            }
+
+            .presenter-image {
+                width: 130px;
+                height: 130px;
+            }
+
+            .presenter-caption {
+                font-size: 14px;
             }
 
             .description {
@@ -425,7 +488,9 @@
 
         <div class="content">
             <div class="seat-counter" id="seatCounter"></div>
+        </div>
 
+        <div class="event-details-section">
             <div class="event-details">
                 <div class="event-info">
                     <div class="event-info-item">
@@ -448,6 +513,13 @@
                     </div>
                 </div>
             </div>
+            <div class="presenter-section">
+                <img src="https://pmpegodefnpnsdbbudcw.supabase.co/storage/v1/object/public/logos/AG3.jpg" alt="Presenter Andrew Grant" class="presenter-image">
+                <div class="presenter-caption">Presenter<br>Andrew Grant</div>
+            </div>
+        </div>
+
+        <div class="content">
 
             <div class="description">
                 <h2>Who is this for?</h2>
