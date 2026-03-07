@@ -537,13 +537,13 @@
 
         async function toggleAttendance(id, attended) {
             try {
-                const response = await fetch('/api/admin/attendance', {
+                const response = await fetch('/api/admin/followup', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ id, attended })
+                    body: JSON.stringify({ action: 'mark-attendance', id, attended })
                 });
 
                 if (response.status === 401) {
