@@ -570,11 +570,13 @@
             }
 
             try {
-                const response = await fetch('/api/admin/send-thankyou', {
+                const response = await fetch('/api/admin/followup', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: 'send-thankyou' })
                 });
 
                 if (response.status === 401) {
