@@ -15,11 +15,11 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { firstName, email } = req.body;
+    const { firstName, email, whereHeard } = req.body;
 
     // Validate input
-    if (!firstName || !email) {
-      return res.status(400).json({ error: 'First name and email are required' });
+    if (!firstName || !email || !whereHeard) {
+      return res.status(400).json({ error: 'First name, email, and where you heard about us are required' });
     }
 
     // Sanitize and validate
@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
     }
 
     // Attempt to add registration
-    const result = await addRegistration(sanitizedName, sanitizedEmail, clientIP);
+    const result = await addRegistration(sanitizedName, sanitizedEmail, clientIP, whereHeard);
 
     if (!result.success) {
       return res.status(400).json({ error: result.message });

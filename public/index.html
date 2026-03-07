@@ -572,6 +572,24 @@
                                placeholder="Enter your email">
                     </div>
 
+                    <div class="form-group">
+                        <label for="whereHeard">Where did you hear about us? *</label>
+                        <select id="whereHeard"
+                                name="whereHeard"
+                                required
+                                style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                            <option value="">-- Select an option --</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Friend or Family">Friend or Family</option>
+                            <option value="Email Newsletter">Email Newsletter</option>
+                            <option value="Search Engine">Search Engine</option>
+                            <option value="Word of Mouth">Word of Mouth</option>
+                            <option value="Event Advertisement">Event Advertisement</option>
+                            <option value="Website">Website</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="submit-btn" id="submitBtn">
                         Register Now - Hurry! Limited seats available
                     </button>
@@ -650,6 +668,7 @@
 
             const firstName = document.getElementById('firstName').value.trim();
             const email = document.getElementById('email').value.trim();
+            const whereHeard = document.getElementById('whereHeard').value;
 
             // Disable button and show loading
             submitBtn.disabled = true;
@@ -662,7 +681,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ firstName, email })
+                    body: JSON.stringify({ firstName, email, whereHeard })
                 });
 
                 const data = await response.json();

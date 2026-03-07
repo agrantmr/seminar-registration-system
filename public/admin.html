@@ -454,6 +454,7 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>How They Heard</th>
                             <th>Registered At</th>
                             <th>Confirmation</th>
                             <th>Week Reminder</th>
@@ -469,6 +470,7 @@
                                 <td>${reg.id}</td>
                                 <td>${reg.first_name}</td>
                                 <td>${reg.email}</td>
+                                <td>${reg.where_heard || '-'}</td>
                                 <td>${new Date(reg.registered_at).toLocaleString()}</td>
                                 <td><span class="badge ${reg.confirmation_sent ? 'success' : 'pending'}">
                                     ${reg.confirmation_sent ? 'Sent' : 'Pending'}
