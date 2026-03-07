@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    const result = await addFeedback(sanitizedName, sanitizedEmail, feedback.trim(), clientIP);
+    const result = await addFeedback(sanitizedName, sanitizedEmail, feedback.trim(), clientIP, consent);
 
     res.status(200).json({
       success: true,

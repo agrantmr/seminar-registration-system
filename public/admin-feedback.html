@@ -197,6 +197,23 @@
             line-height: 1.5;
         }
 
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -451,6 +468,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Feedback</th>
+                            <th>Consent</th>
                             <th>Submitted At</th>
                         </tr>
                     </thead>
@@ -461,6 +479,9 @@
                                 <td>${escapeHtml(item.name)}</td>
                                 <td>${escapeHtml(item.email)}</td>
                                 <td><div class="feedback-text">${escapeHtml(item.feedback)}</div></td>
+                                <td><span class="badge ${item.consent ? 'success' : 'pending'}">
+                                    ${item.consent ? 'Consented' : 'Not Consented'}
+                                </span></td>
                                 <td>${new Date(item.submitted_at).toLocaleString()}</td>
                             </tr>
                         `).join('')}
