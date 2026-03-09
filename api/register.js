@@ -1,6 +1,5 @@
-const { addRegistration } = require('../lib/db');
-const { sendConfirmationEmail } = require('../lib/email');
-const { markConfirmationSent } = require('../lib/db');
+const { addRegistration, markConfirmationSent, getRegistrationCount } = require('../lib/db');
+const { sendConfirmationEmail, sendAdminNotificationEmail } = require('../lib/email');
 const {
   isValidEmail,
   sanitizeName,
@@ -65,6 +64,25 @@ module.exports = async (req, res) => {
       }
     } else {
       console.error('❌ Email failed:', emailResult.error);
+    }
+
+    // Send admin notification
+    try {
+      const totalRegistrations = await getRegistrationCount();
+      const adminNotification = await sendAdminNotificationEmail(
+        result.registration.first_name,
+        result.registration.email,
+        totalRegistrations
+      );
+
+      if (adminNotification.success) {
+        console.log('✉️ Admin notification sent successfully');
+      } else {
+        console.error('❌ Admin notification failed:', adminNotification.error);
+      }
+    } catch (adminError) {
+      console.error('❌ Error sending admin notification:', adminError);
+      // Don't fail the registration if admin notification fails
     }
 
     // Return success
