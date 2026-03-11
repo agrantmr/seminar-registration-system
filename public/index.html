@@ -255,6 +255,17 @@
             margin-bottom: 20px;
         }
 
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -262,7 +273,8 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid #e0e0e0;
@@ -271,9 +283,21 @@
             transition: border-color 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #2d3d8a;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-row .form-group {
+                margin-bottom: 20px;
+            }
         }
 
         .submit-btn {
@@ -572,22 +596,42 @@
                                placeholder="Enter your email">
                     </div>
 
-                    <div class="form-group">
-                        <label for="whereHeard">Where did you hear about us? *</label>
-                        <select id="whereHeard"
-                                name="whereHeard"
-                                required
-                                style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
-                            <option value="">-- Select an option --</option>
-                            <option value="Social Media">Social Media</option>
-                            <option value="Friend or Family">Friend or Family</option>
-                            <option value="Email Newsletter">Email Newsletter</option>
-                            <option value="Search Engine">Search Engine</option>
-                            <option value="Word of Mouth">Word of Mouth</option>
-                            <option value="Event Advertisement">Event Advertisement</option>
-                            <option value="Website">Website</option>
-                            <option value="Other">Other</option>
-                        </select>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="whereHeard">Where did you hear about us? *</label>
+                            <select id="whereHeard"
+                                    name="whereHeard"
+                                    required>
+                                <option value="">-- Select an option --</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Friend or Family">Friend or Family</option>
+                                <option value="Email Newsletter">Email Newsletter</option>
+                                <option value="Search Engine">Search Engine</option>
+                                <option value="Word of Mouth">Word of Mouth</option>
+                                <option value="Event Advertisement">Event Advertisement</option>
+                                <option value="Website">Website</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numSeats">Number of seats? *</label>
+                            <select id="numSeats"
+                                    name="numSeats"
+                                    required>
+                                <option value="">-- Select --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
@@ -669,6 +713,7 @@
             const firstName = document.getElementById('firstName').value.trim();
             const email = document.getElementById('email').value.trim();
             const whereHeard = document.getElementById('whereHeard').value;
+            const numSeats = parseInt(document.getElementById('numSeats').value);
 
             // Disable button and show loading
             submitBtn.disabled = true;
@@ -681,7 +726,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ firstName, email, whereHeard })
+                    body: JSON.stringify({ firstName, email, whereHeard, numSeats })
                 });
 
                 const data = await response.json();

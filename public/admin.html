@@ -302,7 +302,7 @@
 
         <div class="stats">
             <div class="stat-card">
-                <h3>Total Registrations</h3>
+                <h3>Total Seats Booked</h3>
                 <div class="value" id="totalRegistrations">-</div>
             </div>
             <div class="stat-card">
@@ -456,6 +456,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>How They Heard</th>
+                            <th># Seats</th>
                             <th>Registered At</th>
                             <th>Confirmation</th>
                             <th>Week Reminder</th>
@@ -472,6 +473,7 @@
                                 <td>${reg.first_name}</td>
                                 <td>${reg.email}</td>
                                 <td>${reg.where_heard || '-'}</td>
+                                <td><strong>${reg.num_seats || 1}</strong></td>
                                 <td>${new Date(reg.registered_at).toLocaleString()}</td>
                                 <td><span class="badge ${reg.confirmation_sent ? 'success' : 'pending'}">
                                     ${reg.confirmation_sent ? 'Sent' : 'Pending'}

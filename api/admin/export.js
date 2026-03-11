@@ -15,20 +15,28 @@ async function handler(req, res) {
       'ID',
       'First Name',
       'Email',
+      'Where Heard',
+      'Number of Seats',
       'Registered At',
       'Confirmation Sent',
       'Week Reminder Sent',
-      'Day Reminder Sent'
+      'Day Reminder Sent',
+      'Attended',
+      'Thank You Sent'
     ];
 
     const rows = registrations.map(reg => [
       reg.id,
       reg.first_name,
       reg.email,
+      reg.where_heard || '',
+      reg.num_seats || 1,
       new Date(reg.registered_at).toISOString(),
       reg.confirmation_sent ? 'Yes' : 'No',
       reg.week_reminder_sent ? 'Yes' : 'No',
-      reg.day_reminder_sent ? 'Yes' : 'No'
+      reg.day_reminder_sent ? 'Yes' : 'No',
+      reg.attended ? 'Yes' : 'No',
+      reg.thankyou_sent ? 'Yes' : 'No'
     ]);
 
     const csv = [

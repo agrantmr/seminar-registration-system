@@ -14,16 +14,17 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { firstName, email, whereHeard } = req.body;
+    const { firstName, email, whereHeard, numSeats } = req.body;
 
     // Validate input
-    if (!firstName || !email || !whereHeard) {
-      return res.status(400).json({ error: 'First name, email, and where you heard about us are required' });
+    if (!firstName || !email || !whereHeard || !numSeats) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     // Sanitize and validate
     const sanitizedName = sanitizeName(firstName);
     const sanitizedEmail = email.trim().toLowerCase();
+    const parsedNumSeats = parseInt(numSeats);
 
     if (!sanitizedName || sanitizedName.length < 2) {
       return res.status(400).json({ error: 'Please enter a valid first name' });
@@ -31,6 +32,10 @@ module.exports = async (req, res) => {
 
     if (!isValidEmail(sanitizedEmail)) {
       return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+
+    if (!parsedNumSeats || parsedNumSeats < 1 || parsedNumSeats > 10) {
+      return res.status(400).json({ error: 'Number of seats must be between 1 and 10' });
     }
 
     // Check rate limit
@@ -45,7 +50,7 @@ module.exports = async (req, res) => {
     }
 
     // Attempt to add registration
-    const result = await addRegistration(sanitizedName, sanitizedEmail, clientIP, whereHeard);
+    const result = await addRegistration(sanitizedName, sanitizedEmail, clientIP, whereHeard, parsedNumSeats);
 
     if (!result.success) {
       return res.status(400).json({ error: result.message });
